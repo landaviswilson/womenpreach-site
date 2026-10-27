@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Just for Fun — Clergywomen's Retreat 2026</title>
+<style>
+  :root{
+    --plum:#3f1b6b; --plum-dark:#241440; --night:#202a45; --rose:#7a3a9a;
+    --bg:#fbf7ef; --card:#ffffff; --ink:#241b2a; --muted:#6f6478;
+    --line:#ece4d6; --gold:#b87a0e; --sun:#f0c050; --live:#1f9d55; --bad:#c0392b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;padding:0 0 40px}
+  .wrap{max-width:640px;margin:0 auto;padding:0 14px}
+  .band{background:linear-gradient(160deg,var(--night),var(--plum) 55%,var(--plum-dark));color:#fff;text-align:center;
+    padding:18px 16px 16px;border-bottom:5px solid var(--sun);position:relative;overflow:hidden}
+  .band::before{content:"🎲";position:absolute;right:-4px;top:-18px;font-size:120px;opacity:.10;line-height:1}
+  .band h1{margin:0;font-size:21px;position:relative}
+  .band .tag{margin-top:4px;font-size:13px;color:var(--sun);font-weight:650;position:relative}
+  .band a.back{color:#dcc9e3;font-size:12.5px;text-decoration:none;display:inline-block;margin-top:8px;position:relative}
+
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;border:1px solid var(--line);background:#fff;color:var(--plum);font-weight:650;font-size:13px;
+    padding:9px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--plum);color:#fff;border-color:var(--plum)}
+  .swipe{text-align:center;font-size:12px;color:var(--muted);font-weight:650;letter-spacing:.04em;margin:4px 0 2px}
+
+  .panel{display:none}.panel.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 6px 22px rgba(60,20,80,.07)}
+  h2{margin:0 0 4px;font-size:19px;color:var(--plum)}
+  .sub{font-size:13.5px;color:var(--muted);margin-bottom:10px}
+  input[type=text]{width:100%;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .btn{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;background:var(--plum);color:#fff;
+    padding:11px 16px;border-radius:11px;font-weight:650;font-size:15px;text-decoration:none}
+  .btn.alt{background:#fff;color:var(--plum);border:1px solid var(--plum)}
+  .btn.gold{background:var(--gold)}
+  .btn:disabled{opacity:.5}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+
+  /* trivia */
+  .qhead{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .timer{height:6px;background:var(--line);border-radius:4px;margin:8px 0 12px;overflow:hidden}
+  .timer i{display:block;height:100%;background:var(--sun);width:100%;transition:width .25s linear}
+  .q{font-size:18px;font-weight:700;line-height:1.3;margin-bottom:12px}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:12px;
+    padding:12px 14px;font-size:15.5px;margin-top:8px;cursor:pointer;font-weight:600;color:var(--ink)}
+  .opt.right{border-color:var(--live);background:#eef7f0}
+  .opt.wrong{border-color:var(--bad);background:#fdeeec}
+  .opt:disabled{cursor:default}
+  .fb{font-size:13.5px;color:var(--muted);margin-top:10px;min-height:20px}
+  .score{font-size:40px;font-weight:800;color:var(--plum);line-height:1}
+  .lb{margin-top:8px}
+  .lb .r{display:flex;justify-content:space-between;padding:8px 10px;border-radius:9px;font-size:14.5px}
+  .lb .r:nth-child(odd){background:#f6f1f8}
+  .lb .r b{color:var(--plum)}
+  .lb .r.me{outline:2px solid var(--sun)}
+  .medal{width:26px;display:inline-block}
+
+  /* word search */
+  .ws{display:grid;gap:2px;user-select:none;touch-action:none;margin-top:10px}
+  .ws .c{aspect-ratio:1;min-width:0;display:flex;align-items:center;justify-content:center;font-weight:700;border-radius:5px;background:#fff;
+    border:1px solid var(--line);font-size:clamp(11px,3.6vw,18px)}
+  .ws .c.sel{background:var(--sun);border-color:var(--gold)}
+  .ws .c.found{background:#e4d4f2;border-color:#c9b0e0;color:var(--plum)}
+  .wl{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .wl span{font-size:12.5px;font-weight:650;padding:4px 9px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--plum)}
+  .wl span.done{text-decoration:line-through;opacity:.45}
+
+  /* crossword */
+  .cw{display:grid;gap:1px;background:var(--ink);padding:1px;border-radius:6px;margin-top:10px;touch-action:manipulation}
+  .cw .k{aspect-ratio:1;min-width:0;background:#fff;position:relative}
+  .cw .k.blk{background:var(--ink)}
+  .cw .k input{width:100%;min-width:0;height:100%;border:0;text-align:center;font-weight:700;text-transform:uppercase;font-size:clamp(11px,3.4vw,18px);background:transparent;color:var(--ink);padding:0;caret-color:var(--plum)}
+  .cw .k input:focus{outline:none;background:#fff3cf}
+  .cw .k.hl input{background:#f3e9fb}
+  .cw .k.ok input{color:var(--live)}
+  .cw .k.bad input{color:var(--bad)}
+  .cw .k .n{position:absolute;left:2px;top:0;font-size:8px;font-weight:700;color:var(--muted)}
+  .clues{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  @media(max-width:480px){.clues{grid-template-columns:1fr}}
+  .clues h4{margin:0 0 4px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .clue{font-size:13.5px;padding:5px 7px;border-radius:7px;cursor:pointer}
+  .clue.on{background:#f3e9fb}
+  .clue b{color:var(--plum)}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="band">
+  <h1>Just for Fun 🎉</h1>
+  <div class="tag">Clergywomen's Retreat 2026 · Out of the Shadows</div>
+  <a class="back" href="index.html">← Back to the live agenda</a>
+</div>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-p="t1">🏆 Trivia: Methodist History</button>
+    <button class="tab" data-p="t2">🏆 Trivia: Famous Clergywomen</button>
+    <button class="tab" data-p="w1">🔍 Word Search: Clergywomen</button>
+    <button class="tab" data-p="w2">🔍 Word Search: Blackstone</button>
+    <button class="tab" data-p="c1">✏️ Crossword: Clergywomen</button>
+    <button class="tab" data-p="c2">✏️ Crossword: Blackstone</button>
+  </div>
+  <div class="swipe">← Swipe the tabs for more games →</div>
+
+  <div class="panel on" id="p-t1"></div>
+  <div class="panel" id="p-t2"></div>
+  <div class="panel" id="p-w1"></div>
+  <div class="panel" id="p-w2"></div>
+  <div class="panel" id="p-c1"></div>
+  <div class="panel" id="p-c2"></div>
+
+  <footer>Scores on the trivia leaderboards are shared with everyone at the retreat. Be kind, be quick, be legendary.</footer>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+/* ---------------- shared leaderboard backend (public web config) ---------------- */
+var firebaseConfig = {
+  apiKey: "AIzaSyArl1k51bFVBljS0k0aEny9GpU7vJaXBZ8",
+  authDomain: "crcckaraoke.firebaseapp.com",
+  databaseURL: "https://crcckaraoke-default-rtdb.firebaseio.com",
+  projectId: "crcckaraoke",
+  storageBucket: "crcckaraoke.firebasestorage.app",
+  messagingSenderId: "255586178032",
+  appId: "1:255586178032:web:db0d9adfbcfef565b98335"
+};
+var db=null;
+try{ firebase.initializeApp(firebaseConfig); db=firebase.database(); }catch(e){ console.warn("leaderboard offline",e); }
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---------------- TRIVIA CONTENT (fact-checked Oct 2026) ---------------- */
+var TRIVIA = {
+ t1:{ key:"umhistory", title:"United Methodist History", sub:"15 questions · 20 seconds each · faster answers score more",
+  qs:[
+   {q:"In what year did The Methodist Church grant women full clergy rights?",a:"1956",o:["1920","1939","1968"],f:"1956 — which is why we're celebrating 70 years!"},
+   {q:"Who was the first woman to receive full clergy rights in 1956?",a:"Maud Keister Jensen",o:["Georgia Harkness","Anna Howard Shaw","Marjorie Matthews"],f:"Maud Keister Jensen, a missionary to Korea, was the first received into full connection."},
+   {q:"Who was the first woman elected a United Methodist bishop (1980)?",a:"Marjorie Matthews",o:["Leontine T.C. Kelly","Judith Craig","Sharon Brown Christopher"],f:"Marjorie Matthews served the Wisconsin Area."},
+   {q:"Who was the first African American woman elected bishop (1984)?",a:"Leontine T.C. Kelly",o:["Vashti Murphy McKenzie","Sharma Lewis","Tracy Smith Malone"],f:"Bishop Leontine T.C. Kelly, elected in 1984."},
+   {q:"In 1738 John Wesley felt his heart 'strangely warmed' at a meeting on which London street?",a:"Aldersgate",o:["Fleet Street","Bond Street","Oxford Street"],f:"Aldersgate Street, May 24, 1738."},
+   {q:"The 1784 Christmas Conference that organized the Methodist Episcopal Church met in which city?",a:"Baltimore",o:["Philadelphia","New York","Richmond"],f:"Baltimore, at Lovely Lane Chapel."},
+   {q:"The United Methodist Church was formed in 1968 by uniting The Methodist Church with which church?",a:"Evangelical United Brethren",o:["Methodist Protestant","Wesleyan Methodist","Free Methodist"],f:"The 1968 union with the Evangelical United Brethren Church."},
+   {q:"In what year could women first be licensed as local preachers in the Methodist Episcopal Church?",a:"1920",o:["1888","1924","1939"],f:"1920 for local preacher licenses; limited ordination as local deacons and elders followed in 1924."},
+   {q:"In 1880 the General Conference denied ordination to Anna Oliver and which other woman, who was then ordained by the Methodist Protestant Church?",a:"Anna Howard Shaw",o:["Frances Willard","Phoebe Palmer","Barbara Heck"],f:"Anna Howard Shaw — later a leader of the women's suffrage movement."},
+   {q:"In 1888 the Methodist Episcopal Church established which office for laywomen?",a:"Deaconess",o:["Class leader","Local pastor","Lay speaker"],f:"The deaconess program, launched in 1888."},
+   {q:"The 1996 General Conference created a permanent, full and equal order of…",a:"Deacons",o:["Elders","Local pastors","Evangelists"],f:"The Order of Deacon — thirty years old this year."},
+   {q:"Who was the first Latina elected a United Methodist bishop (2004)?",a:"Minerva Carcaño",o:["Cynthia Fierro Harvey","Elaine Stanovsky","Rosemarie Wenner"],f:"Bishop Minerva Carcaño, elected 2004."},
+   {q:"Who was the first woman president of the Council of Bishops (2002)?",a:"Sharon Brown Christopher",o:["Judith Craig","Susan Hassinger","Charlene Kammerer"],f:"Bishop Sharon Brown Christopher, 2002."},
+   {q:"Helenor Davisson, ordained deacon in 1866 as the first ordained woman in the Methodist tradition, belonged to which church?",a:"Methodist Protestant",o:["Methodist Episcopal","Methodist Episcopal, South","United Brethren"],f:"The Methodist Protestant Church, 1866."},
+   {q:"Frances Willard was elected a General Conference delegate in 1888 but never seated. Which organization did she lead?",a:"Woman's Christian Temperance Union",o:["Young Women's Christian Association","American Red Cross","National Woman Suffrage Association"],f:"The Woman's Christian Temperance Union."},
+   {q:"Bishop Charlene Kammerer, leading our opening worship, was assigned to the Virginia Conference in what year?",a:"2004",o:["1996","2000","2008"],f:"She was elected bishop in 1996 and came to Virginia in 2004."},
+   {q:"Who became the first African woman elected a United Methodist bishop in 2008?",a:"Joaquina Filipe Nhanala",o:["Rosemarie Wenner","Ruby-Nell Estrella","Minerva Carcaño"],f:"Bishop Joaquina Filipe Nhanala of Mozambique."},
+   {q:"In 1768 Barbara Heck urged Philip Embury to preach in New York and helped design which chapel?",a:"John Street",o:["Lovely Lane","St. George's","City Road"],f:"John Street Chapel — the 'mother of American Methodism.'"},
+   {q:"Georgia Harkness, the first woman full professor at a U.S. theological seminary, taught applied theology at…",a:"Garrett Biblical Institute",o:["Drew","Boston University","Duke Divinity"],f:"Garrett, 1939–1950. She pushed for women's ordination for twenty years."},
+   {q:"What 'first' happened for clergywomen at the 1976 General Conference?",a:"They were elected as delegates for the first time",o:["The first clergywoman preached the opening sermon","The first clergywoman was elected bishop","The first clergywoman chaired a legislative committee"],f:"1976: clergywomen were first elected General Conference delegates."}
+  ]},
+ t2:{ key:"clergywomen", title:"Famous Clergywomen", sub:"15 questions · 20 seconds each · faster answers score more",
+  qs:[
+   {q:"Who was the first woman ordained by a recognized denomination in the United States (1853, Congregational)?",a:"Antoinette Brown Blackwell",o:["Olympia Brown","Anna Howard Shaw","Phoebe Palmer"],f:"Antoinette Brown Blackwell, 1853."},
+   {q:"Florence Li Tim-Oi became the first woman ordained an Anglican priest in 1944 — where?",a:"Hong Kong",o:["London","Sydney","Toronto"],f:"Hong Kong, during the Second World War."},
+   {q:"Who was the first woman consecrated a bishop in the Anglican Communion (1989)?",a:"Barbara Harris",o:["Katharine Jefferts Schori","Libby Lane","Penny Jamieson"],f:"Bishop Barbara Harris, Diocese of Massachusetts, 1989."},
+   {q:"Regina Jonas, the first woman rabbi, was ordained in 1935 in which city?",a:"Berlin",o:["Vienna","New York","Prague"],f:"Berlin, 1935. She died at Auschwitz in 1944."},
+   {q:"The 'Philadelphia Eleven,' ordained in July 1974, were the first women priests in which church?",a:"The Episcopal Church",o:["The Lutheran Church","The Presbyterian Church","The Roman Catholic Church"],f:"The Episcopal Church — at the Church of the Advocate, July 29, 1974."},
+   {q:"Who was the first woman elected bishop in the African Methodist Episcopal Church (2000)?",a:"Vashti Murphy McKenzie",o:["Jarena Lee","Mildred 'Bonnie' Hines","Teresa Jefferson-Snorton"],f:"Bishop Vashti Murphy McKenzie, 2000."},
+   {q:"Who was the first woman elected bishop in the A.M.E. Zion Church (2008)?",a:"Mildred 'Bonnie' Hines",o:["Vashti Murphy McKenzie","Mary J. Small","Julia Foote"],f:"Bishop Mildred 'Bonnie' Hines, 2008."},
+   {q:"Who was the first woman elected bishop in the Christian Methodist Episcopal Church (2010)?",a:"Teresa Jefferson-Snorton",o:["Leontine T.C. Kelly","Vashti Murphy McKenzie","Sharma Lewis"],f:"Bishop Teresa Jefferson-Snorton, elected 2010."},
+   {q:"Who was the first woman Presiding Bishop of the Episcopal Church (2006)?",a:"Katharine Jefferts Schori",o:["Barbara Harris","Elizabeth Eaton","Pauli Murray"],f:"Katharine Jefferts Schori, an oceanographer turned bishop."},
+   {q:"In 2013 Elizabeth Eaton became the first woman presiding bishop of which denomination?",a:"Evangelical Lutheran Church in America",o:["The Episcopal Church","Presbyterian Church (U.S.A.)","United Church of Christ"],f:"The Evangelical Lutheran Church in America."},
+   {q:"Libby Lane became the first woman bishop (2015) in which church?",a:"Church of England",o:["Church of Scotland","Church of Ireland","Anglican Church of Canada"],f:"The Church of England, consecrated January 2015."},
+   {q:"Jarena Lee was authorized to preach by Richard Allen, founder of which church?",a:"African Methodist Episcopal",o:["A.M.E. Zion","Christian Methodist Episcopal","National Baptist"],f:"The A.M.E. Church. 'If the man may preach… why not the woman?'"},
+   {q:"Mary J. Small was ordained an elder in 1898 by which denomination?",a:"A.M.E. Zion",o:["African Methodist Episcopal","Methodist Episcopal","Methodist Protestant"],f:"The A.M.E. Zion Church — the first Methodist body to ordain a woman elder."},
+   {q:"Margaret Towner, the first woman ordained in the Presbyterian Church, was ordained in the same year Methodist women won full clergy rights. Which year?",a:"1956",o:["1948","1964","1972"],f:"1956 — a big year for clergywomen."},
+   {q:"Addie Davis became the first woman ordained (1964) in which denomination?",a:"Southern Baptist",o:["United Church of Christ","Disciples of Christ","Church of the Nazarene"],f:"Addie Davis, Watts Street Baptist Church, Durham, 1964."},
+   {q:"Sojourner Truth, abolitionist and preacher who co-founded a Methodist church in Kingston, New York, was born with what name?",a:"Isabella Bomefree",o:["Harriet Ross","Amanda Berry","Phillis Wheatley"],f:"Isabella Bomefree (also spelled Baumfree)."},
+   {q:"Olympia Brown was ordained in 1863 by which denomination?",a:"Universalist",o:["Unitarian","Congregational","Methodist Protestant"],f:"The Universalists, 1863."},
+   {q:"In 1977 Pauli Murray became the first African American woman ordained a priest in which church?",a:"The Episcopal Church",o:["The Lutheran Church","The Presbyterian Church","The Methodist Church"],f:"The Episcopal Church — also a lawyer, poet, and civil rights pioneer."}
+  ]}
+};
+
+/* ---------------- TRIVIA ENGINE ---------------- */
+var PER_Q=15, SECS=20;
+function trivia(id){
+  var T=TRIVIA[id], el=document.getElementById('p-'+id), st={};
+  var saved=''; try{saved=localStorage.getItem('wp_name')||'';}catch(e){}
+  function start(){
+    el.innerHTML='<div class="card"><h2>'+T.title+'</h2><div class="sub">'+T.sub+'</div>'+
+      '<label style="font-size:13px;font-weight:700;color:var(--muted)">Your name (for the leaderboard)</label>'+
+      '<input type="text" id="nm-'+id+'" maxlength="24" placeholder="e.g. Rev. Sue" value="'+esc(saved)+'">'+
+      '<div class="row"><button class="btn gold" id="go-'+id+'">Start the quiz →</button></div></div>'+
+      '<div class="card"><h2>Leaderboard</h2><div class="sub">Top 10 right now</div><div class="lb" id="lb-'+id+'"></div></div>';
+    document.getElementById('go-'+id).onclick=function(){
+      var n=document.getElementById('nm-'+id).value.trim(); if(!n){alert('Add your name first!');return;}
+      try{localStorage.setItem('wp_name',n);}catch(e){}
+      st={name:n,qs:shuffle(T.qs).slice(0,PER_Q),i:0,score:0,right:0}; ask();
+    };
+    watchLB(T.key,'lb-'+id,null);
+  }
+  function ask(){
+    if(st.i>=st.qs.length) return finish();
+    var q=st.qs[st.i], opts=shuffle([q.a].concat(q.o)), t0=Date.now(), done=false, tm;
+    el.innerHTML='<div class="card"><div class="qhead"><span>Question '+(st.i+1)+' of '+st.qs.length+'</span><span>Score '+st.score+'</span></div>'+
+      '<div class="timer"><i id="bar-'+id+'"></i></div><div class="q">'+esc(q.q)+'</div>'+
+      opts.map(function(o,k){return '<button class="opt" data-k="'+k+'">'+esc(o)+'</button>';}).join('')+
+      '<div class="fb" id="fb-'+id+'"></div><div class="row"><button class="btn" id="nx-'+id+'" style="display:none">Next →</button></div></div>';
+    var bar=document.getElementById('bar-'+id);
+    tm=setInterval(function(){var left=Math.max(0,SECS-(Date.now()-t0)/1000);bar.style.width=(left/SECS*100)+'%';if(left<=0){clearInterval(tm);answer(null);}},250);
+    function answer(choice){
+      if(done)return; done=true; clearInterval(tm);
+      var secs=(Date.now()-t0)/1000, pts=0;
+      if(choice===q.a){ pts=100+Math.round(Math.max(0,SECS-secs)/SECS*50); st.score+=pts; st.right++; }
+      var btns=el.querySelectorAll('.opt');
+      btns.forEach(function(b){ b.disabled=true; if(b.textContent===q.a)b.classList.add('right'); else if(choice!==null&&b.textContent===choice)b.classList.add('wrong'); });
+      document.getElementById('fb-'+id).innerHTML=(choice===q.a?'<b style="color:var(--live)">Correct! +'+pts+'</b> · ':(choice===null?'<b style="color:var(--bad)">Time\'s up.</b> ':'<b style="color:var(--bad)">Not quite.</b> '))+esc(q.f);
+      var nx=document.getElementById('nx-'+id); nx.style.display='inline-flex'; nx.textContent=(st.i+1<st.qs.length?'Next →':'See my score →');
+      nx.onclick=function(){st.i++;ask();};
+    }
+    el.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){answer(b.textContent);};});
+  }
+  function finish(){
+    var rec={name:st.name,score:st.score,right:st.right,ts:Date.now()}, myKey=null;
+    if(db){ try{ myKey=db.ref('womenpreach/lb/'+T.key).push(rec).key; }catch(e){} }
+    el.innerHTML='<div class="card" style="text-align:center"><div class="sub">'+esc(st.name)+', you scored</div><div class="score">'+st.score+'</div>'+
+      '<div class="sub" style="margin-top:6px">'+st.right+' of '+st.qs.length+' correct</div>'+
+      '<div class="row" style="justify-content:center"><button class="btn gold" id="again-'+id+'">Play again</button></div></div>'+
+      '<div class="card"><h2>Leaderboard</h2><div class="sub">Top 10 right now</div><div class="lb" id="lb-'+id+'"></div></div>';
+    document.getElementById('again-'+id).onclick=start;
+    watchLB(T.key,'lb-'+id,myKey);
+  }
+  start();
+}
+var lbWatch={};
+function watchLB(key,elId,myKey){
+  var box=document.getElementById(elId);
+  if(!db){ box.innerHTML='<div class="sub">Leaderboard unavailable offline.</div>'; return; }
+  if(lbWatch[key]) lbWatch[key].off();
+  var ref=db.ref('womenpreach/lb/'+key).orderByChild('score').limitToLast(50);
+  lbWatch[key]=ref;
+  ref.on('value',function(s){
+    var arr=[]; s.forEach(function(c){var v=c.val();v._k=c.key;arr.push(v);});
+    arr.sort(function(a,b){return b.score-a.score||a.ts-b.ts;});
+    var b=document.getElementById(elId); if(!b)return;
+    if(!arr.length){b.innerHTML='<div class="sub">No scores yet — be the first!</div>';return;}
+    var medals=['🥇','🥈','🥉'];
+    b.innerHTML=arr.slice(0,10).map(function(r,i){
+      return '<div class="r'+(r._k===myKey?' me':'')+'"><span><span class="medal">'+(medals[i]||(i+1)+'.')+'</span>'+esc(r.name)+'</span><b>'+r.score+'</b></div>';
+    }).join('');
+  });
+}
+
+/* ---------------- PUZZLE DATA (generated) ---------------- */
+var PUZ = {"ws1":{"size":15,"rows":["YLLEKNNHLUETUDS","SMIBAOPONESNEJC","BLEWISNKCSSOSBD","ROTRHSWCCALMTTC","BHOESIHETAEOOOH","WATDMVIHHERDEFR","RRELAANDGTUCOOI","EKLELDEDTLTOARS","VNLOLNSPURTAENT","IEAUWAHSEEERMUO","LSMWILLARDEYONP","OSRTAGCSNMLTEEH","PEIZNEKCMANOHME","POHSIBOASELRAER","ILWDHAKUSBEANNB"],"words":[{"w":"CHRISTOPHER","x":14,"y":3,"dx":0,"dy":1},{"w":"MATTHEWS","x":12,"y":9,"dx":-1,"dy":-1},{"w":"HARKNESS","x":1,"y":4,"dx":0,"dy":1},{"w":"DAVISSON","x":5,"y":7,"dx":0,"dy":-1},{"w":"KAMMERER","x":6,"y":14,"dx":1,"dy":-1},{"w":"MCKENZIE","x":8,"y":12,"dx":-1,"dy":0},{"w":"CARCANO","x":8,"y":3,"dx":1,"dy":1},{"w":"WILLARD","x":3,"y":10,"dx":1,"dy":0},{"w":"NHANALA","x":5,"y":8,"dx":1,"dy":1},{"w":"JENSEN","x":13,"y":1,"dx":-1,"dy":0},{"w":"OLIVER","x":0,"y":11,"dx":0,"dy":-1},{"w":"MALLET","x":2,"y":10,"dx":0,"dy":-1},{"w":"DEACON","x":11,"y":5,"dx":-1,"dy":-1},{"w":"BISHOP","x":5,"y":13,"dx":-1,"dy":0},{"w":"KELLY","x":4,"y":0,"dx":-1,"dy":0},{"w":"HINES","x":6,"y":4,"dx":0,"dy":1},{"w":"FOOTE","x":13,"y":5,"dx":-1,"dy":1},{"w":"SMALL","x":4,"y":4,"dx":0,"dy":1},{"w":"MEYER","x":13,"y":12,"dx":-1,"dy":-1},{"w":"LEWIS","x":1,"y":2,"dx":1,"dy":0},{"w":"ELDER","x":3,"y":7,"dx":0,"dy":-1},{"w":"SHAW","x":7,"y":9,"dx":-1,"dy":0},{"w":"HECK","x":7,"y":5,"dx":0,"dy":-1}]},"ws2":{"size":15,"rows":["OHAUTOCCABOTMWL","NBINRTRUHTRABSO","APLMREESOIWEUMD","CVOBIEUKIBRTTSE","OINLLMVECEPUTNP","RRGBEAAATIETEOO","NGAUAOCRTTPIRTT","BIMTMREKNWMTWTR","HNBDGAFOSCOSOOA","RIGUTMFOHTHNOWI","EAAEBELIOEOIDAL","ERNILBRERTENIYR","DUNLEGDIRKAOEDO","CNECCANNONLENHA","TBSCHWARTZLETND"],"words":[{"w":"BLACKSTONE","x":3,"y":3,"dx":1,"dy":1},{"w":"BELLEFONTE","x":1,"y":14,"dx":1,"dy":-1},{"w":"BUTTERWOOD","x":12,"y":1,"dx":0,"dy":1},{"w":"INSTITUTE","x":11,"y":10,"dx":0,"dy":-1},{"w":"NOTTOWAY","x":13,"y":4,"dx":0,"dy":1},{"w":"SCHWARTZ","x":2,"y":14,"dx":1,"dy":0},{"w":"RAILROAD","x":14,"y":7,"dx":0,"dy":1},{"w":"MAGNOLIA","x":2,"y":7,"dx":0,"dy":-1},{"w":"VIRGINIA","x":1,"y":3,"dx":0,"dy":1},{"w":"OAKRIDGE","x":11,"y":12,"dx":-1,"dy":0},{"w":"TOBACCO","x":11,"y":0,"dx":-1,"dy":0},{"w":"PICKETT","x":10,"y":6,"dx":-1,"dy":-1},{"w":"BARFOOT","x":3,"y":5,"dx":1,"dy":1},{"w":"RETREAT","x":10,"y":3,"dx":-1,"dy":1},{"w":"TAVERN","x":8,"y":6,"dx":-1,"dy":-1},{"w":"ARTHUR","x":11,"y":1,"dx":-1,"dy":0},{"w":"CANNON","x":4,"y":13,"dx":1,"dy":0},{"w":"ACORN","x":0,"y":2,"dx":0,"dy":1},{"w":"DEPOT","x":14,"y":2,"dx":0,"dy":1},{"w":"GUARD","x":4,"y":8,"dx":-1,"dy":1},{"w":"INN","x":3,"y":11,"dx":-1,"dy":1}]},"cw1":{"w":14,"h":14,"entries":[{"a":"MATTHEWS","c":"Marjorie ___, first woman elected a United Methodist bishop (1980)","x":4,"y":0,"d":"A","n":1},{"a":"HINES","c":"Mildred 'Bonnie' ___, first woman bishop of the A.M.E. Zion Church (2008)","x":8,"y":0,"d":"D","n":2},{"a":"DAVISSON","c":"Helenor ___, ordained deacon in 1866 \u2014 first ordained woman in the Methodist tradition","x":13,"y":1,"d":"D","n":3},{"a":"BALTIMORE","c":"City of the 1784 Christmas Conference","x":0,"y":3,"d":"A","n":4},{"a":"ALDERSGATE","c":"Street where Wesley's heart was 'strangely warmed'","x":1,"y":3,"d":"D","n":5},{"a":"MCKENZIE","c":"Vashti Murphy ___, first woman bishop of the A.M.E. Church (2000)","x":5,"y":3,"d":"D","n":6},{"a":"CARCANO","c":"Minerva ___, first Latina United Methodist bishop (2004)","x":10,"y":4,"d":"D","n":7},{"a":"KELLY","c":"Leontine T.C. ___, first African American woman bishop (1984)","x":4,"y":6,"d":"A","n":8},{"a":"HECK","c":"Barbara ___, who urged Philip Embury to preach in New York (1768)","x":3,"y":7,"d":"D","n":9},{"a":"DEACON","c":"Order made permanent and full by the 1996 General Conference","x":8,"y":8,"d":"A","n":10},{"a":"OLIVER","c":"Anna ___, first woman to graduate from an American seminary (1876)","x":12,"y":8,"d":"D","n":11},{"a":"HARKNESS","c":"Georgia ___, first woman full professor at a U.S. theological seminary","x":0,"y":10,"d":"A","n":12},{"a":"SHAW","c":"Anna Howard ___, denied ordination in 1880, ordained by the Methodist Protestants","x":7,"y":10,"d":"D","n":13},{"a":"JENSEN","c":"Maud Keister ___, first woman to receive full clergy rights in 1956","x":0,"y":12,"d":"A","n":14},{"a":"WILLARD","c":"Frances ___, elected a delegate in 1888 but never seated","x":7,"y":13,"d":"A","n":15}]},"cw2":{"w":15,"h":14,"entries":[{"a":"RAILROAD","c":"Shipping link that put Blackstone on the map","x":2,"y":0,"d":"D","n":1},{"a":"SCHWARTZ","c":"___ Tavern, the town's oldest building and now a museum","x":6,"y":0,"d":"A","n":2},{"a":"TAVERNS","c":"'Black's and White's' were two of these","x":12,"y":0,"d":"D","n":3},{"a":"GUARD","c":"The Virginia National ___ now headquartered at the fort","x":0,"y":1,"d":"A","n":4},{"a":"TOBACCO","c":"Dark-leaf crop that built the town's early economy","x":6,"y":2,"d":"D","n":5},{"a":"BELLEFONTE","c":"The town's short-lived name from 1875 to 1882","x":0,"y":3,"d":"A","n":6},{"a":"BLACKSTONE","c":"Town named for an English jurist","x":0,"y":3,"d":"D","n":6},{"a":"INN","c":"The ___ at Blackstone, our retreat home","x":14,"y":4,"d":"D","n":7},{"a":"CANNON","c":"James ___ Jr., first principal of the Blackstone Female Institute","x":9,"y":5,"d":"A","n":8},{"a":"ARTHUR","c":"Bea ___, 'Golden Girl' who studied at Blackstone College for Girls","x":10,"y":5,"d":"D","n":9},{"a":"PICKETT","c":"Fort ___, the Army post established here in 1941","x":4,"y":7,"d":"A","n":10},{"a":"ACORN","c":"Name of the old college yearbook \u2014 and a meeting room here","x":4,"y":9,"d":"D","n":11},{"a":"BARFOOT","c":"Fort Pickett's new name","x":8,"y":10,"d":"A","n":12},{"a":"NOTTOWAY","c":"County that Blackstone calls home","x":0,"y":11,"d":"A","n":13},{"a":"MAGNOLIA","c":"Ballroom where we gather for worship and meals","x":1,"y":13,"d":"A","n":14}]}};
+
+/* ---------------- WORD SEARCH ---------------- */
+function wordsearch(id,P,title,sub){
+  var el=document.getElementById('p-'+id), N=P.size, found={}, t0=null;
+  el.innerHTML='<div class="card"><h2>'+title+'</h2><div class="sub">'+sub+' Drag across the letters (any direction, forwards or backwards).</div>'+
+    '<div class="ws" id="g-'+id+'" style="grid-template-columns:repeat('+N+',minmax(0,1fr))"></div><div class="wl" id="l-'+id+'"></div><div class="fb" id="m-'+id+'"></div></div>';
+  var g=document.getElementById('g-'+id), cells=[];
+  for(var y=0;y<N;y++)for(var x=0;x<N;x++){var c=document.createElement('div');c.className='c';c.textContent=P.rows[y][x];c.dataset.x=x;c.dataset.y=y;g.appendChild(c);cells.push(c);}
+  var L=document.getElementById('l-'+id);
+  L.innerHTML=P.words.map(function(w){return '<span id="w-'+id+'-'+w.w+'">'+w.w+'</span>';}).join('');
+  var start=null, cur=[];
+  function cellAt(ev){var t=ev.touches?ev.touches[0]:ev; var e=document.elementFromPoint(t.clientX,t.clientY); return (e&&e.classList.contains('c')&&e.parentNode===g)?e:null;}
+  function line(a,b){ var x0=+a.dataset.x,y0=+a.dataset.y,x1=+b.dataset.x,y1=+b.dataset.y, dx=x1-x0, dy=y1-y0;
+    if(!(dx===0||dy===0||Math.abs(dx)===Math.abs(dy))) return null;
+    var n=Math.max(Math.abs(dx),Math.abs(dy)), sx=Math.sign(dx), sy=Math.sign(dy), out=[];
+    for(var i=0;i<=n;i++) out.push(cells[(y0+sy*i)*N+(x0+sx*i)]); return out; }
+  function paint(){cells.forEach(function(c){c.classList.remove('sel');});cur.forEach(function(c){c.classList.add('sel');});}
+  function down(ev){ var c=cellAt(ev); if(!c)return; ev.preventDefault(); if(!t0)t0=Date.now(); start=c; cur=[c]; paint(); }
+  function move(ev){ if(!start)return; var c=cellAt(ev); if(!c)return; ev.preventDefault(); var l=line(start,c); if(l){cur=l;paint();} }
+  function up(){ if(!start)return; var s=cur.map(function(c){return c.textContent;}).join(''), r=s.split('').reverse().join('');
+    P.words.forEach(function(w){ if(!found[w.w]&&(s===w.w||r===w.w)){ found[w.w]=1; cur.forEach(function(c){c.classList.add('found');}); document.getElementById('w-'+id+'-'+w.w).classList.add('done'); } });
+    start=null;cur=[];paint();
+    var n=Object.keys(found).length; var m=document.getElementById('m-'+id);
+    if(n===P.words.length){ m.innerHTML='<b style="color:var(--live)">You found them all in '+Math.round((Date.now()-t0)/1000)+' seconds! 🎉</b>'; }
+    else m.textContent=n+' of '+P.words.length+' found'; }
+  g.addEventListener('pointerdown',down); g.addEventListener('pointermove',move); window.addEventListener('pointerup',up);
+  g.addEventListener('touchstart',down,{passive:false}); g.addEventListener('touchmove',move,{passive:false}); g.addEventListener('touchend',up);
+}
+
+/* ---------------- CROSSWORD ---------------- */
+function crossword(id,P,title,sub){
+  var el=document.getElementById('p-'+id), W=P.w, H=P.h;
+  var sol={}, nums={};
+  P.entries.forEach(function(e){ for(var i=0;i<e.a.length;i++){ var x=e.x+(e.d==='A'?i:0), y=e.y+(e.d==='D'?i:0); sol[x+','+y]=e.a[i]; } nums[e.x+','+e.y]=e.n; });
+  el.innerHTML='<div class="card"><h2>'+title+'</h2><div class="sub">'+sub+'</div>'+
+    '<div class="cw" id="g-'+id+'" style="grid-template-columns:repeat('+W+',minmax(0,1fr))"></div>'+
+    '<div class="row"><button class="btn" id="chk-'+id+'">Check</button><button class="btn alt" id="rev-'+id+'">Reveal all</button><button class="btn alt" id="clr-'+id+'">Clear</button></div>'+
+    '<div class="fb" id="m-'+id+'"></div>'+
+    '<div class="clues"><div><h4>Across</h4>'+P.entries.filter(function(e){return e.d==='A';}).map(function(e){return '<div class="clue" data-n="'+e.n+'" data-d="A"><b>'+e.n+'.</b> '+esc(e.c)+'</div>';}).join('')+'</div>'+
+    '<div><h4>Down</h4>'+P.entries.filter(function(e){return e.d==='D';}).map(function(e){return '<div class="clue" data-n="'+e.n+'" data-d="D"><b>'+e.n+'.</b> '+esc(e.c)+'</div>';}).join('')+'</div></div></div>';
+  var g=document.getElementById('g-'+id), inp={};
+  for(var y=0;y<H;y++)for(var x=0;x<W;x++){ var k=document.createElement('div'); var key=x+','+y;
+    if(sol[key]){ k.className='k'; if(nums[key]) k.innerHTML='<span class="n">'+nums[key]+'</span>';
+      var i=document.createElement('input'); i.maxLength=1; i.autocomplete='off'; i.dataset.key=key; i.setAttribute('inputmode','text'); k.appendChild(i); inp[key]=i; }
+    else k.className='k blk'; g.appendChild(k); }
+  var dir='A';
+  function entryAt(key,d){ return P.entries.filter(function(e){ if(e.d!==d)return false; var x=+key.split(',')[0], y=+key.split(',')[1];
+    return d==='A'? (y===e.y&&x>=e.x&&x<e.x+e.a.length) : (x===e.x&&y>=e.y&&y<e.y+e.a.length); })[0]; }
+  function hl(key){ Object.keys(inp).forEach(function(k){inp[k].parentNode.classList.remove('hl');}); el.querySelectorAll('.clue').forEach(function(c){c.classList.remove('on');});
+    var e=entryAt(key,dir)||entryAt(key,dir==='A'?'D':'A'); if(!e)return; dir=e.d;
+    for(var i=0;i<e.a.length;i++){var k=(e.x+(e.d==='A'?i:0))+','+(e.y+(e.d==='D'?i:0)); inp[k].parentNode.classList.add('hl');}
+    var c=el.querySelector('.clue[data-n="'+e.n+'"][data-d="'+e.d+'"]'); if(c)c.classList.add('on'); }
+  function step(key,back){ var x=+key.split(',')[0], y=+key.split(',')[1]; var nx=x+(dir==='A'?(back?-1:1):0), ny=y+(dir==='D'?(back?-1:1):0); var n=inp[nx+','+ny]; if(n){n.focus();n.select();} }
+  Object.keys(inp).forEach(function(key){ var i=inp[key];
+    i.addEventListener('focus',function(){hl(key);});
+    i.addEventListener('click',function(){ if(document.activeElement===i){ var o=dir==='A'?'D':'A'; if(entryAt(key,o)){dir=o;hl(key);} } });
+    i.addEventListener('input',function(){ i.value=i.value.replace(/[^a-z]/ig,'').toUpperCase().slice(-1); i.parentNode.classList.remove('ok','bad'); if(i.value) step(key,false); });
+    i.addEventListener('keydown',function(ev){ if(ev.key==='Backspace'&&!i.value){step(key,true);}
+      if(ev.key==='ArrowRight'||ev.key==='ArrowLeft'){dir='A';hl(key);step(key,ev.key==='ArrowLeft');ev.preventDefault();}
+      if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){dir='D';hl(key);step(key,ev.key==='ArrowUp');ev.preventDefault();} });
+  });
+  el.querySelectorAll('.clue').forEach(function(c){ c.onclick=function(){ var e=P.entries.filter(function(e){return e.n==+c.dataset.n&&e.d===c.dataset.d;})[0]; dir=e.d; var k=inp[e.x+','+e.y]; k.focus(); hl(e.x+','+e.y); }; });
+  document.getElementById('chk-'+id).onclick=function(){ var ok=0,tot=0,filled=0; Object.keys(inp).forEach(function(k){ tot++; var v=inp[k].value; inp[k].parentNode.classList.remove('ok','bad'); if(v){filled++; if(v===sol[k]){ok++;inp[k].parentNode.classList.add('ok');} else inp[k].parentNode.classList.add('bad');} });
+    document.getElementById('m-'+id).innerHTML= ok===tot ? '<b style="color:var(--live)">Perfect — every square is right! 🎉</b>' : ok+' of '+tot+' letters correct ('+(filled-ok)+' wrong, '+(tot-filled)+' blank).'; };
+  document.getElementById('rev-'+id).onclick=function(){ if(!confirm('Reveal the whole puzzle?'))return; Object.keys(inp).forEach(function(k){inp[k].value=sol[k];inp[k].parentNode.classList.remove('bad');inp[k].parentNode.classList.add('ok');}); };
+  document.getElementById('clr-'+id).onclick=function(){ Object.keys(inp).forEach(function(k){inp[k].value='';inp[k].parentNode.classList.remove('ok','bad');}); document.getElementById('m-'+id).textContent=''; };
+}
+
+/* ---------------- boot ---------------- */
+trivia('t1'); trivia('t2');
+wordsearch('w1',PUZ.ws1,'Word Search: Trailblazing Clergywomen','Methodist clergywomen and deacons, plus the first women bishops of the A.M.E. and A.M.E. Zion churches.');
+wordsearch('w2',PUZ.ws2,'Word Search: Blackstone, Virginia','Our host town — its history, its rooms, and its famous names.');
+crossword('c1',PUZ.cw1,'Crossword: Trailblazing Clergywomen','Tap a square to type; tap again to switch between Across and Down.');
+crossword('c2',PUZ.cw2,'Crossword: Blackstone, Virginia','Tap a square to type; tap again to switch between Across and Down.');
+
+var tabs=document.getElementById('tabs');
+tabs.addEventListener('click',function(ev){ var b=ev.target.closest('.tab'); if(!b)return;
+  tabs.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t===b);});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+b.dataset.p);});
+  try{history.replaceState(null,'','#'+b.dataset.p);}catch(e){} });
+if(location.hash){ var b=tabs.querySelector('.tab[data-p="'+location.hash.slice(1)+'"]'); if(b)b.click(); }
+</script>
+</body>
+</html>
