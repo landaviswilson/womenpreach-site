@@ -22,6 +22,9 @@
   - start/end: 24-hour time, e.g. "13:00" = 1:00 PM, "09:00" = 9:00 AM
   - links:    buttons on the session (Mentimeter, slides, handouts).
               ONLY links with a real url show. Leave [] for none.
+              Links appear 10 minutes before the session starts
+              (change REVEAL_MINUTES below). Add always:true to a link
+              to show it all the time.
   - workshops: a list of parallel workshops shown inside the session.
 
   After editing, re-upload the file to Netlify. The short link
@@ -196,8 +199,7 @@
 
 <div class="wrap">
   <div class="toolbar">
-    <a href="https://www.google.com/maps/dir/?api=1&destination=The+Inn+at+Blackstone%2C+Blackstone%2C+VA" target="_blank" rel="noopener">📍 Directions to The Inn</a>
-    <a href="https://docs.google.com/presentation/d/1Br2xbuxrCSTOPj74LJOsmWwdxuversz1/edit?usp=sharing" target="_blank" rel="noopener">🎉 Celebration slides</a>
+    <a data-reveal="mon 10:30" style="display:none" href="https://docs.google.com/presentation/d/1Br2xbuxrCSTOPj74LJOsmWwdxuversz1/edit?usp=sharing" target="_blank" rel="noopener">🎉 Celebration slides</a>
     <a href="games.html">🎲 Just for Fun: games</a>
   </div>
 
@@ -257,6 +259,10 @@
 /* =================================================================
    SCHEDULE  —  edit here (see instructions in the comment up top)
    ================================================================= */
+// Slide/Mentimeter/handout links stay hidden until this many minutes
+// before their session starts. Add  always:true  to a link to show it all the time.
+var REVEAL_MINUTES = 10;
+
 var RETREAT = {
   mon: "2026-11-09",   // Monday
   tue: "2026-11-10"    // Tuesday
@@ -271,7 +277,7 @@ var WORKSHOPS = [
 
 var SCHEDULE = [
   // ---- MONDAY, NOV 9 ----
-  { day:"mon", start:"09:00", end:"10:30", title:"Check-In",
+  { day:"mon", start:"09:00", end:"10:30", title:"Registration/Check-In",
     detail:"", leader:"", location:"Main Lobby · The Inn at Blackstone", links:[] },
 
   { day:"mon", start:"10:30", end:"12:00", title:"Celebration of 70 Years of Full Clergywomen's Rights",
@@ -301,14 +307,14 @@ var SCHEDULE = [
 
   { day:"mon", start:"18:30", end:"21:00", title:"Fellowship",
     detail:"", leader:"", location:"",
-    links:[ {label:"🎲 Trivia, word searches & crosswords", url:"games.html"} ] },
+    links:[ {label:"🎲 Trivia, word searches & crosswords", url:"games.html", always:true} ] },
 
   // ---- TUESDAY, NOV 10 ----
   { day:"tue", start:"07:15", end:"08:00", title:"Yoga with Halli Faulkner",
     detail:"Optional", leader:"", location:"Main Hallway · 3rd Floor", links:[] },
 
   { day:"tue", start:"08:00", end:"09:00", title:"Buffet Breakfast",
-    detail:"", leader:"", location:"Magnolia Ballroom", links:[] },
+    detail:"", leader:"", location:"Acorn Room", links:[] },
 
   { day:"tue", start:"09:00", end:"09:30", title:"Check Out of Rooms",
     detail:"", leader:"", location:"", links:[] },
@@ -369,12 +375,17 @@ function findState(now){
   return {items:items,current:current,next:next,before:before,after:after};
 }
 
-function linkButtons(links, cls){
+function isRevealed(dayKey, hhmm){
+  return currentNow() >= new Date(toDate(dayKey, hhmm).getTime() - REVEAL_MINUTES*60000);
+}
+function linkButtons(links, cls, s){
   if(!links) return "";
+  var open = !s || isRevealed(s.day, s.start);
   var out="";
   for(var i=0;i<links.length;i++){
     var L=links[i];
     if(!L.url || L.url==="#" ) continue;
+    if(!open && !L.always) continue;
     out += '<a class="'+cls+'" href="'+L.url+'" target="_blank" rel="noopener">'+L.label+' ↗</a>';
   }
   return out;
@@ -416,7 +427,7 @@ function renderNow(state, now){
               (c.location? '<span><span class="lab">Where</span>'+c.location+'</span>':'')+
             '</div>';
     html += workshopList(c.workshops);
-    var lb=linkButtons(c.links,"btn");
+    var lb=linkButtons(c.links,"btn",c);
     if(lb) html += '<div class="links">'+lb+'</div>';
     html += '</div></div>';
   }
@@ -446,7 +457,7 @@ function renderAgenda(state){
             (s.leader? '<div class="rlead">'+s.leader+'</div>':'')+
             (s.location? '<div class="rloc">'+s.location+'</div>':'');
     html += workshopList(s.workshops);
-    var lb=linkButtons(s.links,"chip");
+    var lb=linkButtons(s.links,"chip",s);
     if(lb) html += '<div class="rlinks">'+lb+'</div>';
     html += '</div></div>';
   }
@@ -463,6 +474,11 @@ function tick(){
   var now=currentNow();
   var state=findState(now);
   renderClock(now);
+  var gated=document.querySelectorAll("[data-reveal]");
+  for(var g=0; g<gated.length; g++){
+    var r=gated[g].getAttribute("data-reveal").split(" ");
+    gated[g].style.display = isRevealed(r[0], r[1]) ? "" : "none";
+  }
   renderNow(state,now);
   renderAgenda(state);
 }
